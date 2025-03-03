@@ -1,9 +1,9 @@
 <template>
         <nav class="header">
             <ul>
-                <li><a href="#" @click.prevent="$emit('navigate', 'add-feed')">Add Feed</a></li>
-                <li><a href="#" @click.prevent="$emit('navigate', 'list-feeds')">List Feeds</a></li>
-                <li><a href="#" @click.prevent="$emit('navigate', 'preferences')">Preferences</a></li>
+                <li><a href="#" @click.prevent="$emit('changeTab','AddFeed')">Add Feed</a></li>
+                <li><a href="#" @click.prevent="$emit('changeTab','ListFeeds')">List Feeds</a></li>
+                <li><a href="#" @click.prevent="$emit('changeTab','Preferences')">Preferences</a></li>
             </ul>
         </nav>
 </template>

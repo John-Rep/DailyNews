@@ -1,20 +1,47 @@
 
+<script setup>
+import { reactive } from "vue";
+
+const feedList = JSON.parse(localStorage.getItem("feedList"));
+
+const formData = reactive({
+  feedUrl: "",
+  feedTitle: "",
+  description: ""
+});
+
+// Submit function (prevents refresh)
+const submitForm = () => {
+    feedList.push(formData);
+    localStorage.setItem("feedList", JSON.stringify(feedList));
+  alert("Feed Added! (Data is saved in Local Storage)");
+};
+
+// Clear form & Local Storage
+const clearForm = () => {
+  formData.feedUrl = "";
+  formData.feedTitle = "";
+  formData.description = "";
+};
+</script>
+
 <template>
-    <div class="form-container">
-        <h2>Add New RSS Feed</h2>
-        <form action="#" method="POST">
-            <label for="feed-url">RSS Feed URL:</label>
-            <input type="url" id="feed-url" name="feed-url" required>
+  <div class="form-container">
+    <h2>Add a New RSS Feed</h2>
+    <form @submit.prevent="submitForm">
+      <label for="feed-url">RSS Feed URL:</label>
+      <input v-model="formData.feedUrl" type="url" id="feed-url" required />
 
-            <label for="feed-title">Title:</label>
-            <input type="text" id="feed-title" name="feed-title" required>
+      <label for="feed-title">Title:</label>
+      <input v-model="formData.feedTitle" type="text" id="feed-title" required />
 
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" rows="4"></textarea>
+      <label for="description">Description:</label>
+      <textarea v-model="formData.description" id="description" rows="4"></textarea>
 
-            <button type="submit">Add Feed</button>
-        </form>
-    </div>
+      <button type="submit">Add Feed</button>
+      <button type="button" @click="clearForm" class="clear-btn">Clear</button>
+    </form>
+  </div>
 </template>
 
 <style scoped>
