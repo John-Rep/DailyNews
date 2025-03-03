@@ -1,47 +1,45 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import NavigationHeader from './components/NavigationHeader.vue';
+import NewFeedForm from './components/NewFeedForm.vue';
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div class="container">
+    <NavigationHeader class="header" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div class="content">
+      <NewFeedForm />
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+/* Main container takes full height */
+.container {
+  background: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  width: 100%; /* Stretches across the screen */
+  margin: 0;
+  padding: 0;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+/* Header stays at the top */
+.header {
+  width: 100%;
+  background: #333;
+  padding: 15px 0;
+  text-align: center;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+/* Content area: centers the form */
+.content {
+  flex-grow: 1; /* Pushes form to the center */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: 100%;
 }
 </style>
