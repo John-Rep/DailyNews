@@ -26,7 +26,6 @@ const fetchRSSFeed = async () => {
     const parser = new DOMParser();
     const xml = parser.parseFromString(data.contents, "application/xml");
     const items = xml.querySelectorAll("item"); // Get all <item> elements
-    console.log(items[0]);
     feedItems.value = items;
 
     // Extract RSS feed information

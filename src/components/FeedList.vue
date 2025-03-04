@@ -1,12 +1,22 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
-var feedList = JSON.parse(localStorage.getItem("feedList")  || "[]");
+const feedList = ref([]);
 
 const removeFeed = (feed) => {
-  localStorage.setItem('feedList', JSON.stringify(feedList.filter(item => item != feed)));
-  feedList = JSON.parse(localStorage.getItem("feedList")  || "[]");
+  let newFeed = JSON.parse(localStorage.getItem("feedList"));
+  newFeed.splice(feed, 1);
+  localStorage.setItem('feedList', JSON.stringify(newFeed));
+  feedList.value = JSON.parse(localStorage.getItem("feedList")  || "[]");
 }
+
+const getFeed = () => {
+  feedList.value = JSON.parse(localStorage.getItem("feedList")  || "[]");
+}
+
+onMounted(() => {
+  getFeed()
+  })
 </script>
 
 <template>
@@ -21,7 +31,7 @@ const removeFeed = (feed) => {
       <h3>{{ feed.feedTitle }}</h3>
       <p>{{ feed.description ? feed.description : "No description available" }}</p>
       <a href="#" @click.prevent="$emit('viewFeed',feed.feedUrl)">View Feed</a>
-      <a href="#" @click.prevent="removeFeed(feed)">Delete Feed</a>
+      <a href="#" @click.prevent="removeFeed(index)">Delete Feed</a>
     </div>
   </div>
 </template>
@@ -32,9 +42,8 @@ const removeFeed = (feed) => {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 400px;
-  max-width: 500px;
-  margin: 20px auto;
+  width: 500px;
+  margin: 100px;
 }
 
 h2 {
