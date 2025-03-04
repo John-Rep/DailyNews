@@ -1,13 +1,12 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
-const feedList = ref([]);
+var feedList = JSON.parse(localStorage.getItem("feedList")  || "[]");
 
-// Load feeds from local storage on mount
-onMounted(() => {
-  const storedFeeds = JSON.parse(localStorage.getItem("feedList")  || "[]");
-  feedList.value = storedFeeds;
-});
+const removeFeed = (feed) => {
+  localStorage.setItem('feedList', JSON.stringify(feedList.filter(item => item != feed)));
+  feedList = JSON.parse(localStorage.getItem("feedList")  || "[]");
+}
 </script>
 
 <template>
@@ -18,10 +17,11 @@ onMounted(() => {
       No feeds added yet.
     </div>
 
-    <div v-for="feed in feedList" :key="feed.feedUrl" class="feed-card">
+    <div v-for="(feed, index) in feedList" :key="feed.feedUrl" class="feed-card">
       <h3>{{ feed.feedTitle }}</h3>
       <p>{{ feed.description ? feed.description : "No description available" }}</p>
       <a href="#" @click.prevent="$emit('viewFeed',feed.feedUrl)">View Feed</a>
+      <a href="#" @click.prevent="removeFeed(feed)">Delete Feed</a>
     </div>
   </div>
 </template>

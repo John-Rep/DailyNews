@@ -2,7 +2,7 @@
 <script setup>
 import { reactive } from "vue";
 
-const feedList = JSON.parse(localStorage.getItem("feedList"));
+const feedList = JSON.parse(localStorage.getItem("feedList")  || "[]");
 
 const formData = reactive({
   feedUrl: "",
@@ -15,6 +15,7 @@ const submitForm = () => {
     feedList.push(formData);
     localStorage.setItem("feedList", JSON.stringify(feedList));
   alert("Feed Added! (Data is saved in Local Storage)");
+  clearForm();
 };
 
 // Clear form & Local Storage

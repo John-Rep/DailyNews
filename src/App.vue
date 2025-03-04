@@ -31,7 +31,7 @@ const viewFeed = (RSS: string) => {
       <FeedList @viewFeed = "viewFeed" />
     </div>
     <div v-if="activeTab == 'FeedDetail'" class="content">
-      <FeedView :RSS=RSSView class="content"/>
+      <FeedView :feedUrl=RSSView class="content"/>
     </div>
   </div>
 </template>
@@ -43,7 +43,7 @@ const viewFeed = (RSS: string) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh; /* Full viewport height */
+  min-height: 100vh; /* Full viewport height */
   width: 100%; /* Stretches across the screen */
   margin: 0;
   padding: 0;
