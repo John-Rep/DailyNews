@@ -1,47 +1,84 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref } from 'vue';
+
+import NavigationHeader from './components/NavigationHeader.vue';
+import NewFeedForm from './components/NewFeedForm.vue';
+// @ts-ignore
+import FeedList from './components/FeedList.vue';
+// @ts-ignore
+import FeedView from './components/FeedView.vue';
+// @ts-ignore
+import EditFeedForm from './components/EditFeedForm.vue';
+
+const activeTab = ref("AddFeed");
+const RSSView = ref('');
+const editIndex = ref(0);
+
+const changeTab = (tab: string) => {
+  activeTab.value = tab;
+}
+
+const viewFeed = (RSS: string) => {
+  activeTab.value = "FeedDetail";
+  RSSView.value = RSS;
+}
+
+const editFeed = (index: number) => {
+  activeTab.value = "EditFeed";
+  editIndex.value = index;
+}
+
+const feedEdited = () => {
+  activeTab.value = "ListFeeds";
+}
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <div class="container">
+    <NavigationHeader class="header" @changeTab = "changeTab"/>
+    <div v-if="activeTab == 'AddFeed'" class="content">
+      <NewFeedForm />
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    <div v-if="activeTab == 'EditFeed'" class="content">
+      <EditFeedForm :index=editIndex @feedEdited = "feedEdited" />
+    </div>
+    <div v-if="activeTab == 'ListFeeds'" class="content">
+      <FeedList @viewFeed = "viewFeed" @editFeed = "editFeed" />
+    </div>
+    <div v-if="activeTab == 'FeedDetail'" class="content">
+      <FeedView :feedUrl=RSSView class="content"/>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
+/* Main container takes full height */
+.container {
+  background: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh; /* Full viewport height */
+  width: 100%; /* Stretches across the screen */
+  margin: 0;
+  padding: 0;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+/* Header stays at the top */
+.header {
+  width: 100%;
+  background: #333;
+  padding: 15px 0;
+  text-align: center;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+/* Content area: centers the form */
+.content {
+  flex-grow: 1; /* Pushes form to the center */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  width: 100%;
 }
 </style>
