@@ -11,6 +11,8 @@ const feedLink = ref("");
 const errorMessage = ref("");
 const feedItems = ref([]);
 
+const feedCount = ref(10);
+
 const fetchRSSFeed = async () => {
   if (!props.feedUrl) return;
 
@@ -50,19 +52,30 @@ watch(() => props.feedUrl, fetchRSSFeed);
 <template>
   <div class="feed-container">
     <h2>RSS Feed Information</h2>
+
+    <label for="feedCount">Select Feed Limit</label>
+    <select id="feedCount" v-model="feedCount">
+      <option>10</option>
+      <option>50</option>
+      <option>100</option>
+      <option>All</option>
+    </select>
+
     <div>
       <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
 
       <div v-else>
-        <h3>{{ feedTitle }}</h3>
+        <h2>{{ feedTitle }}</h2>
         <p>{{ feedDescription }}</p>
-        <a :href="feedLink" target="_blank">Visit Source</a>
+        <a :href="feedLink" target="_blank">Visit Site</a>
       </div>
-      <div v-for="item in feedItems">
-        <h3>{{ item.querySelector("title").textContent }}</h3>
-        <p>{{ item.querySelector("pubDate")?.textContent }}</p>
-        <p>{{ item.querySelector("description")?.textContent }}</p>
-        <a :href="item.querySelector('link').textContent" target="_blank">Visit Source</a>
+      <div v-for="(item, index) in feedItems">
+        <div v-if="feedCount == 'All' || index < feedCount">
+          <h3>{{ item.querySelector("title").textContent }}</h3>
+          <p>{{ item.querySelector("pubDate")?.textContent }}</p>
+          <p>{{ item.querySelector("description")?.textContent }}</p>
+          <a :href="item.querySelector('link').textContent" target="_blank">View Article</a>
+        </div>
       </div>
     </div>
   </div>
