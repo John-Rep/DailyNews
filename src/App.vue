@@ -7,9 +7,12 @@ import NewFeedForm from './components/NewFeedForm.vue';
 import FeedList from './components/FeedList.vue';
 // @ts-ignore
 import FeedView from './components/FeedView.vue';
+// @ts-ignore
+import EditFeedForm from './components/EditFeedForm.vue';
 
 const activeTab = ref("AddFeed");
 const RSSView = ref('');
+const editIndex = ref(0);
 
 const changeTab = (tab: string) => {
   activeTab.value = tab;
@@ -19,6 +22,16 @@ const viewFeed = (RSS: string) => {
   activeTab.value = "FeedDetail";
   RSSView.value = RSS;
 }
+
+const editFeed = (index: number) => {
+  activeTab.value = "EditFeed";
+  editIndex.value = index;
+}
+
+const feedEdited = () => {
+  activeTab.value = "ListFeeds";
+}
+
 </script>
 
 <template>
@@ -27,8 +40,11 @@ const viewFeed = (RSS: string) => {
     <div v-if="activeTab == 'AddFeed'" class="content">
       <NewFeedForm />
     </div>
+    <div v-if="activeTab == 'EditFeed'" class="content">
+      <EditFeedForm :index=editIndex @feedEdited = "feedEdited" />
+    </div>
     <div v-if="activeTab == 'ListFeeds'" class="content">
-      <FeedList @viewFeed = "viewFeed" />
+      <FeedList @viewFeed = "viewFeed" @editFeed = "editFeed" />
     </div>
     <div v-if="activeTab == 'FeedDetail'" class="content">
       <FeedView :feedUrl=RSSView class="content"/>

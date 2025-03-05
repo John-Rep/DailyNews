@@ -31,6 +31,9 @@ onMounted(() => {
       <h3>{{ feed.feedTitle }}</h3>
       <p>{{ feed.description ? feed.description : "No description available" }}</p>
       <a href="#" @click.prevent="$emit('viewFeed',feed.feedUrl)">View Feed</a>
+      <br/>
+      <a href="#" @click.prevent="$emit('editFeed',index)">Edit Feed</a>
+      <br/>
       <a href="#" @click.prevent="removeFeed(index)">Delete Feed</a>
     </div>
   </div>
