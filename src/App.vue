@@ -9,6 +9,8 @@ import FeedList from './components/FeedList.vue';
 import FeedView from './components/FeedView.vue';
 // @ts-ignore
 import EditFeedForm from './components/EditFeedForm.vue';
+// @ts-ignore
+import SavedList from './components/SavedList.vue';
 
 const activeTab = ref("AddFeed");
 const RSSView = ref('');
@@ -48,6 +50,9 @@ const feedEdited = () => {
     </div>
     <div v-if="activeTab == 'FeedDetail'" class="content">
       <FeedView :feedUrl=RSSView class="content"/>
+    </div>
+    <div v-if="activeTab == 'Preferences'" class="content">
+      <SavedList class="content"/>
     </div>
   </div>
 </template>
