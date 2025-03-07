@@ -13,6 +13,8 @@ const feedItems = ref([]);
 
 const feedCount = ref(10);
 
+const savedArticles = ref([]);
+
 const fetchRSSFeed = async () => {
   if (!props.feedUrl) return;
 
@@ -44,9 +46,33 @@ const fetchRSSFeed = async () => {
   }
 };
 
+const getSavedArticles = () => {
+  savedArticles.value = JSON.parse(localStorage.getItem("savedArticles")  || "[]");
+}
+
+const saveArticle = (item) => {
+  getSavedArticles();
+  const serializer = new XMLSerializer();
+  savedArticles.value.push(serializer.serializeToString(item));
+  localStorage.setItem('savedArticles', JSON.stringify(savedArticles.value));
+}
+
+const serializeItem = (item) => {
+  const serializer = new XMLSerializer();
+  return serializer.serializeToString(item);
+}
+
+const removeArticle = (article) => {
+  getSavedArticles();
+  savedArticles.value.splice(article, 1);
+  localStorage.setItem('savedArticles', JSON.stringify(savedArticles.value));
+}
+
+
 // Fetch the feed when the component mounts or if the URL changes
-onMounted(fetchRSSFeed);
+onMounted(() => {fetchRSSFeed(); getSavedArticles();});
 watch(() => props.feedUrl, fetchRSSFeed);
+
 </script>
 
 <template>
@@ -70,11 +96,15 @@ watch(() => props.feedUrl, fetchRSSFeed);
         <a :href="feedLink" target="_blank">Visit Site</a>
       </div>
       <div v-for="(item, index) in feedItems">
-        <div v-if="feedCount == 'All' || index < feedCount">
+        <div v-if="feedCount == 'All' || index < feedCount" class="feed-card">
           <h3>{{ item.querySelector("title").textContent }}</h3>
           <p>{{ item.querySelector("pubDate")?.textContent }}</p>
           <p>{{ item.querySelector("description")?.textContent }}</p>
           <a :href="item.querySelector('link').textContent" target="_blank">View Article</a>
+          <br/>
+          <!-- <p>{{ savedArticles }}</p> -->
+          <a v-if="!savedArticles.includes(serializeItem(item))" href="#" @click.prevent="saveArticle(item)">Save Article</a>
+          <a v-if="savedArticles.includes(serializeItem(item))" href="#" @click.prevent="removeArticle(savedArticles.indexOf(serializeItem(item)))">Unsave Article</a>
         </div>
       </div>
     </div>
@@ -91,6 +121,15 @@ watch(() => props.feedUrl, fetchRSSFeed);
   text-align: center;
   flex-direction: column;
   margin: 100px;
+}
+
+.feed-card {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 20px;
+  width: 100%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
