@@ -46,7 +46,7 @@ onMounted(() => {
     </div>
 
     <div v-for="(article, index) in savedXMLs" class="feed-list">
-      <div v-if="article.querySelector('title').textContent.includes(searchBar) || article.querySelector('description')?.textContent.includes(searchBar)" class="feed-card">
+      <div v-if="article.querySelector('title').textContent.includes(searchBar) || article.querySelector('description')?.textContent.includes(searchBar)" class="news-item">
         <h3>{{ article.querySelector("title").textContent }}</h3>
         <p>{{ article.querySelector("pubDate")?.textContent }}</p>
         <p>{{ article.querySelector("description")?.textContent }}</p>
@@ -85,32 +85,39 @@ h2 {
   width: 100%;
 }
 
-.feed-card {
-  background: #f9f9f9;
+.news-item {
+  background: #fff;
   padding: 15px;
-  border-radius: 5px;
-  margin-top: 20px;
-  width: 100%;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.feed-card h3 {
+.news-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+h3 {
   margin: 0;
   color: black;
 }
 
-.feed-card p {
+p {
   color: #444;
 }
 
-.feed-card a {
+a {
   display: inline-block;
   margin-top: 5px;
   color: #007bff;
   text-decoration: none;
 }
 
-.feed-card a:hover {
+a:hover {
   text-decoration: underline;
 }
 </style>

@@ -96,13 +96,14 @@ watch(() => props.feedUrl, fetchRSSFeed);
         <a :href="feedLink" target="_blank">Visit Site</a>
       </div>
       <div v-for="(item, index) in feedItems">
-        <div v-if="feedCount == 'All' || index < feedCount" class="feed-card">
+        <div v-if="feedCount == 'All' || index < feedCount" class="news-item">
           <h3>{{ item.querySelector("title").textContent }}</h3>
           <p>{{ item.querySelector("pubDate")?.textContent }}</p>
           <p>{{ item.querySelector("description")?.textContent }}</p>
+          <img v-if="item.querySelector('image') || item.querySelector('enclosure')" :src="item.querySelector('image')?.textContent || 
+               item.querySelector('enclosure')?.getAttribute('url')" alt="News Image" class="news-image" />
           <a :href="item.querySelector('link').textContent" target="_blank">View Article</a>
           <br/>
-          <!-- <p>{{ savedArticles }}</p> -->
           <a v-if="!savedArticles.includes(serializeItem(item))" href="#" @click.prevent="saveArticle(item)">Save Article</a>
           <a v-if="savedArticles.includes(serializeItem(item))" href="#" @click.prevent="removeArticle(savedArticles.indexOf(serializeItem(item)))">Unsave Article</a>
         </div>
@@ -121,15 +122,6 @@ watch(() => props.feedUrl, fetchRSSFeed);
   text-align: center;
   flex-direction: column;
   margin: 100px;
-}
-
-.feed-card {
-  background: #f9f9f9;
-  padding: 15px;
-  border-radius: 5px;
-  margin-top: 20px;
-  width: 100%;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
@@ -159,5 +151,21 @@ a:hover {
 .error {
   color: red;
   font-weight: bold;
+}
+
+.news-item {
+  background: #fff;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.news-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-top: 10px;
 }
 </style>

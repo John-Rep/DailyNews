@@ -33,23 +33,26 @@ const editFeed = (index: number) => {
 const feedEdited = () => {
   activeTab.value = "ListFeeds";
 }
-
 </script>
 
 <template>
   <div class="container">
-    <NavigationHeader class="header" @changeTab = "changeTab"/>
+    <NavigationHeader class="header" @changeTab="changeTab" />
+    
     <div v-if="activeTab == 'AddFeed'" class="content">
       <NewFeedForm />
     </div>
+
     <div v-if="activeTab == 'EditFeed'" class="content">
-      <EditFeedForm :index=editIndex @feedEdited = "feedEdited" />
+      <EditFeedForm :index="editIndex" @feedEdited="feedEdited" />
     </div>
+
     <div v-if="activeTab == 'ListFeeds'" class="content">
-      <FeedList @viewFeed = "viewFeed" @editFeed = "editFeed" />
+      <FeedList @viewFeed="viewFeed" @editFeed="editFeed" />
     </div>
-    <div v-if="activeTab == 'FeedDetail'" class="content">
-      <FeedView :feedUrl=RSSView class="content"/>
+
+    <div v-if="activeTab == 'FeedDetail'" class="news-container">
+      <FeedView :feedUrl="RSSView" />
     </div>
     <div v-if="activeTab == 'Preferences'" class="content">
       <SavedList class="content"/>
@@ -78,12 +81,22 @@ const feedEdited = () => {
   text-align: center;
 }
 
-/* Content area: centers the form */
+/* Content area */
 .content {
-  flex-grow: 1; /* Pushes form to the center */
+  flex-grow: 1;
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  justify-content: center;
+  align-items: center;
   width: 100%;
+}
+
+/* News feed container */
+.news-container {
+  width: 90%;
+  max-width: 1200px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
