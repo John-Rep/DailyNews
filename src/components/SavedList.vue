@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 
 const savedList = ref([]);
 const savedXMLs = ref([]);
+const searchBar = ref('');
 
 const removeSaved = (article) => {
   getSaved();
@@ -39,13 +40,20 @@ onMounted(() => {
       No articles saved yet.
     </div>
 
-    <div v-for="(article, index) in savedXMLs" class="feed-card">
-      <h3>{{ article.querySelector("title").textContent }}</h3>
-      <p>{{ article.querySelector("pubDate")?.textContent }}</p>
-      <p>{{ article.querySelector("description")?.textContent }}</p>
-      <a :href="article.querySelector('link').textContent" target="_blank">View Article</a>
-      <br/>
-      <a href="#" @click.prevent="removeSaved(index)">Remove Article</a>
+    <div v-if="savedXMLs.length !== 0" class="search-bar">
+      Search saved feeds:
+      <input type="text" v-model="searchBar" placeholder="Search Title or Description" />
+    </div>
+
+    <div v-for="(article, index) in savedXMLs" class="feed-list">
+      <div v-if="article.querySelector('title').textContent.includes(searchBar) || article.querySelector('description')?.textContent.includes(searchBar)" class="feed-card">
+        <h3>{{ article.querySelector("title").textContent }}</h3>
+        <p>{{ article.querySelector("pubDate")?.textContent }}</p>
+        <p>{{ article.querySelector("description")?.textContent }}</p>
+        <a :href="article.querySelector('link').textContent" target="_blank">View Article</a>
+        <br/>
+        <a href="#" @click.prevent="removeSaved(index)">Remove Article</a>
+      </div>
     </div>
   </div>
 </template>
@@ -71,6 +79,10 @@ h2 {
   text-align: center;
   font-style: italic;
   color: #666;
+}
+
+.feed-list {
+  width: 100%;
 }
 
 .feed-card {
