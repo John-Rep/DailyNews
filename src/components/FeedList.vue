@@ -3,20 +3,21 @@ import { onMounted, ref } from "vue";
 
 const feedList = ref([]);
 
-const removeFeed = (feed) => {
-  let newFeed = JSON.parse(localStorage.getItem("feedList"));
-  newFeed.splice(feed, 1);
-  localStorage.setItem('feedList', JSON.stringify(newFeed));
-  feedList.value = JSON.parse(localStorage.getItem("feedList")  || "[]");
-}
+const removeFeed = (index) => {
+  let storedFeeds = JSON.parse(localStorage.getItem("feedList")) || [];
+  
+  if (index >= 0 && index < storedFeeds.length) {
+    storedFeeds.splice(index, 1);
+    localStorage.setItem("feedList", JSON.stringify(storedFeeds));
+    feedList.value = storedFeeds;
+  }
+};
 
 const getFeed = () => {
-  feedList.value = JSON.parse(localStorage.getItem("feedList")  || "[]");
-}
+  feedList.value = JSON.parse(localStorage.getItem("feedList")) || [];
+};
 
-onMounted(() => {
-  getFeed()
-  })
+onMounted(getFeed);
 </script>
 
 <template>
@@ -27,14 +28,14 @@ onMounted(() => {
       No feeds added yet.
     </div>
 
-    <div v-for="(feed, index) in feedList" :key="feed.feedUrl" class="feed-card">
-      <h3>{{ feed.feedTitle }}</h3>
-      <p>{{ feed.description ? feed.description : "No description available" }}</p>
-      <a href="#" @click.prevent="$emit('viewFeed',feed.feedUrl)">View Feed</a>
-      <br/>
-      <a href="#" @click.prevent="$emit('editFeed',index)">Edit Feed</a>
-      <br/>
-      <a href="#" @click.prevent="removeFeed(index)">Delete Feed</a>
+    <div class="feed-grid">
+      <div v-for="(feed, index) in feedList" :key="feed.feedUrl" class="feed-card">
+        <h3>{{ feed.feedTitle }}</h3>
+        <p>{{ feed.description || "No description available" }}</p>
+        <a href="#" @click.prevent="$emit('viewFeed', feed.feedUrl)">View Feed</a>
+        <a href="#" @click.prevent="$emit('editFeed', index)">Edit Feed</a>
+        <a href="#" class="delete" @click.prevent="removeFeed(index)">Delete Feed</a>
+      </div>
     </div>
   </div>
 </template>
@@ -45,12 +46,13 @@ onMounted(() => {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 500px;
-  margin: 100px;
+  width: 90%;
+  max-width: 800px;
+  margin: 50px auto;
+  text-align: center;
 }
 
 h2 {
-  text-align: center;
   color: black;
 }
 
@@ -60,12 +62,19 @@ h2 {
   color: #666;
 }
 
+.feed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
 .feed-card {
   background: #f9f9f9;
   padding: 15px;
   border-radius: 5px;
-  margin-top: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  text-align: left;
 }
 
 .feed-card h3 {
@@ -82,6 +91,11 @@ h2 {
   margin-top: 5px;
   color: #007bff;
   text-decoration: none;
+  margin-right: 10px;
+}
+
+.feed-card a.delete {
+  color: red;
 }
 
 .feed-card a:hover {

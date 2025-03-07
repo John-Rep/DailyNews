@@ -28,7 +28,16 @@ const fetchRSSFeed = async () => {
     const parser = new DOMParser();
     const xml = parser.parseFromString(data.contents, "application/xml");
     const items = xml.querySelectorAll("item"); // Get all <item> elements
-    feedItems.value = items;
+    feedItems.value = Array.from(items).map(item => {
+      return {
+        title: item.querySelector("title")?.textContent || "Sans titre",
+        pubDate: item.querySelector("pubDate")?.textContent || "",
+        description: item.querySelector("description")?.textContent || "",
+        link: item.querySelector("link")?.textContent || "#",
+        image: item.querySelector("image")?.textContent || 
+               item.querySelector("enclosure")?.getAttribute("url") || ""
+      };
+    });
 
     // Extract RSS feed information
     const titleElement = xml.querySelector("channel > title");
@@ -69,12 +78,13 @@ watch(() => props.feedUrl, fetchRSSFeed);
         <p>{{ feedDescription }}</p>
         <a :href="feedLink" target="_blank">Visit Site</a>
       </div>
-      <div v-for="(item, index) in feedItems">
+      <div v-for="(item, index) in feedItems" :key="index" class="news-item">
         <div v-if="feedCount == 'All' || index < feedCount">
-          <h3>{{ item.querySelector("title").textContent }}</h3>
-          <p>{{ item.querySelector("pubDate")?.textContent }}</p>
-          <p>{{ item.querySelector("description")?.textContent }}</p>
-          <a :href="item.querySelector('link').textContent" target="_blank">View Article</a>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.pubDate }}</p>
+          <p>{{ item.description }}</p>
+          <a :href="item.link" target="_blank">View Article</a>
+          <img v-if="item.image" :src="item.image" alt="News Image" class="news-image" />
         </div>
       </div>
     </div>
@@ -120,5 +130,21 @@ a:hover {
 .error {
   color: red;
   font-weight: bold;
+}
+
+.news-item {
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.news-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-top: 10px;
 }
 </style>
