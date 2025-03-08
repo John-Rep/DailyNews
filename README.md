@@ -14,7 +14,7 @@ DailyNews est une plateforme permettant d'agréger et de gérer des flux RSS dan
 -  Stockage des données dans le `localStorage`
 -  Gestion des menus : Enregistrer un flux - Liste des flux - Préférences
 
-## 🛠 Technologies utilisées
+##  Technologies utilisées
 - **Frontend** : Vue 3, TypeScript, Vite
 - **Stockage** : `localStorage`
 - **Outils** : ESLint, Vue-TSC, Volar
